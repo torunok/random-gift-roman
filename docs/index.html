@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Random Gift for Roman</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header class="header">
+        <h1>🎁 Random Gift for Roman</h1>
+      </header>
+
+      <main class="main">
+        <!-- Контейнер для сценаріїв/анімацій -->
+        <section id="stage" class="stage"></section>
+      </main>
+
+      <footer class="footer">
+        <small>© 2025 • Лише для події ДН. Ми зберігаємо ім’я, нік та ipHash (sha256 з сіллю) тільки для визначення подарунку. </small>
+      </footer>
+    </div>
+
+    <!-- Модалка з умовами -->
+    <div class="modal" id="consentModal" aria-hidden="true">
+      <div class="modal-content">
+        <h2>Важливо!</h2>
+        <p>
+          Цей сайт створено задля визначення подарунку для Романа. Словом, щоб подарувати справді те, що потрібно, а не аби що)) Натискаючи кнопку «Я погоджуюсь» ви приймаєте умови, що подарунок буде вручений, а
+          майбутньо-визначений подарунок буде прив’язаний до <strong>вашого імені</strong> та <strong>IP адреси</strong> (у хешованому вигляді).
+        </p>
+        <label class="field">
+          <span>Ваше ім’я</span>
+          <input id="inputName" type="text" placeholder="Напр., Андрій" />
+        </label>
+        <label class="check">
+          <input id="checkboxAgree" type="checkbox" />
+          <span>Погоджуюсь з умовами</span>
+        </label>
+        <div class="actions">
+          <button id="btnAgree" class="btn btn-primary" disabled>Я погоджуюсь</button>
+          <button id="btnPass" class="btn btn-ghost">Я пас</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.API_BASE = "__REPLACE_WITH_WORKER_URL__"; // приклад: https://random-gift-roman.yourname.workers.dev
+    </script>
+    <script src="./app.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,21 @@
+name = "random-gift-roman"
+main = "worker.js"
+compatibility_date = "2024-09-30"
+
+[[kv_namespaces]]
+binding = "KV"
+id = "86f8673bcbc749c789b796fc106c7108"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "random_gift_db"
+database_id = "6074494e-8624-4c66-b2b6-8aaa28dea5bd"
+
+[vars]
+ALLOWED_ORIGIN = "https://YOUR_GITHUB_PAGES_DOMAIN" # напр.: https://romanmoloshiy.github.io
+
+# Секрети додати окремо:
+# wrangler secret put JWT_SECRET
+# wrangler secret put ADMIN_USER
+# wrangler secret put ADMIN_PASS
+# wrangler secret put SALT
