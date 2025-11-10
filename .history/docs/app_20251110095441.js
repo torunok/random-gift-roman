@@ -186,7 +186,7 @@ function showThanksForm() {
   stage.innerHTML = '';
   const view = el(`
     <div class="intro fade-in">
-      <div class="photo slide-left"><img src="./images/roman.png" alt="Roman"/></div>
+      <div class="photo slide-left"><img src="./images/roman.jpg" alt="Roman"/></div>
       <div class="text slide-right">
         <h2>Щиро вдячний!</h2>
         <p>Буду радий розділити цей момент із вами. А поки запишіть свій нік у Telegram, щоб я пізніше повідомив дату, місце та час).</p>
