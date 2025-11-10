@@ -21,7 +21,7 @@ export default {
 
 
     // CORS
-    corsHeaders = makeCORSHeaders(origin, env);
+    const corsHeaders = makeCORSHeaders(origin, env);
     if (isPreflight) {
       return new Response(null, { status: 204, headers: corsHeaders });
     }
