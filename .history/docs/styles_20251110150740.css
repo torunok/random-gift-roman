@@ -54,13 +54,9 @@ body {
 }
 
 .footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
     padding: 20px;
     text-align: center;
-    color: var(--muted);
+    color: var(--muted)
 }
 
 .modal {
@@ -130,12 +126,9 @@ body {
 }
 
 .btn-ghost {
-    margin-bottom: 400px;
-    margin-left: 500px;
-    position: fixed;
     background: transparent;
     border-color: #2a2a2d;
-    color: white;
+    color: var(--fg)
 }
 
 .btn:disabled {

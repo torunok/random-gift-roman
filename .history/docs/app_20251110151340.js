@@ -13,12 +13,6 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 const el = (html) => { const d = document.createElement('div'); d.innerHTML = html.trim(); return d.firstElementChild; };
 function escapeHtml(str = '') { return String(str).replace(/[&<>"]+/g, s => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[s])); }
 
-// Валідація Telegram-ніка
-function isValidTg(nick = '') {
-  const n = nick.trim();
-  return /^@?[A-Za-z0-9_]{3,32}$/.test(n);
-}
-
 // Безпечний fetch API з лімітованим парсингом
 async function api(path, opts = {}) {
   const url = API() + path;
@@ -80,13 +74,10 @@ btnAgree?.addEventListener('click', async () => {
 
   hideConsent();
 
-  // якщо вже є призначення — показуємо фінал або вимагаємо Telegram
+  // якщо вже є призначення — показуємо фінал
   try {
     const me = await api('/api/me', { method: 'GET' });
-    if (me && me.assigned) {
-      if (!me.telegram) return showThanksForm();
-      return renderFinal(me.gift, me.name, me.telegram);
-    }
+    if (me && me.assigned) return renderFinal(me.gift, me.name, me.telegram);
   } catch { /* тихо */ }
 
   renderIntro(name);
@@ -122,7 +113,7 @@ async function startRandom() {
   stage.appendChild(blackout);
 
   // ефект + підказка
-  await sleep(2000);
+  await sleep(5000);
   blackout.textContent = 'Все ґуд, це просто такий ефект)';
 
   // відлік 5..1
@@ -184,8 +175,8 @@ async function showGiftSequence(gift) {
   `);
   stage.appendChild(wrap);
 
-  // 3) через 10с показати кнопку переходу далі
-  await sleep(10000);
+  // 3) через 10с показати "І це все?"
+  await sleep(300);
   const moreBtn = el(`<div class="center"><button id="btnMore" class="btn btn-ghost">І це все?</button></div>`);
   stage.appendChild(moreBtn);
   moreBtn.querySelector('#btnMore').addEventListener('click', showThanksForm);
@@ -205,28 +196,19 @@ function showThanksForm() {
   const form = el(`
     <div class="card fade-in" style="margin-top:16px;">
       <label class="field"><span>Ваш Telegram-нік</span>
-        <input id="tgNick" type="text" placeholder="@nickname" required />
-        <small class="muted">Формат: @username, 3–32 символи (латиниця, цифри, _)</small>
+        <input id="tgNick" type="text" placeholder="@nickname" />
       </label>
-      <div class="actions center"><button id="btnMeet" class="btn btn-primary" disabled>Зустрінемось</button></div>
+      <div class="actions center"><button id="btnMeet" class="btn btn-primary">Зустрінемось</button></div>
     </div>
   `);
   stage.append(view, form);
   setTimeout(() => form.classList.add('scale-in'), 500);
-
-  const tgInput = $('#tgNick');
-  const btn = form.querySelector('#btnMeet');
-  tgInput.addEventListener('input', () => {
-    btn.disabled = !isValidTg(tgInput.value);
-  });
-  btn.addEventListener('click', finalizeUser);
+  form.querySelector('#btnMeet').addEventListener('click', finalizeUser);
 }
 
 async function finalizeUser() {
-  const inp = $('#tgNick');
-  let nick = (inp?.value || '').trim();
-  if (!isValidTg(nick)) { alert('Вкажіть коректний Telegram-нік (3–32 символи, латиниця/цифри/_).'); return; }
-  if (!nick.startsWith('@')) nick = '@' + nick;
+  const nick = $('#tgNick').value.trim();
+  if (nick.length < 3) { alert('Вкажіть коректний нік (3+ символи)'); return; }
 
   try {
     await api('/api/finalize', { method: 'POST', body: JSON.stringify({ telegram: nick }) });
@@ -251,6 +233,14 @@ function renderFinal(gift, name, tg) {
       <div class="gift-desc">
         <h3>${escapeHtml(gift.title || 'Подарунок')}</h3>
         <p>${escapeHtml(gift.description || 'Опис')}</p>
+        <hr style="border-color:#222;margin:12px 0;"/>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <img src="./images/roman.png" alt="Roman" style="width:64px;height:64px;border-radius:10px;object-fit:cover"/>
+          <div>
+            <div><strong>Для:</strong> ${escapeHtml(name || 'Друг')}</div>
+            ${tg ? `<div><strong>Telegram:</strong> ${escapeHtml(tg)}</div>` : ''}
+          </div>
+        </div>
       </div>
     </div>
   `);
@@ -261,12 +251,11 @@ function renderFinal(gift, name, tg) {
 (async function init() {
   showConsent();
 
-  // якщо юзер вже має призначення — показати одразу (але вимагати Telegram, якщо його ще нема)
+  // якщо юзер вже має призначення — показати одразу (без згоди)
   try {
     const me = await api('/api/me', { method: 'GET' });
     if (me && me.assigned) {
       hideConsent();
-      if (!me.telegram) return showThanksForm();
       return renderFinal(me.gift, me.name, me.telegram);
     }
   } catch {
