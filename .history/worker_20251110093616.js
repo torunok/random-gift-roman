@@ -306,14 +306,13 @@ async function getIpHash(request, salt) {
   return arr.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-async function tryLock(env, key, ttlSeconds){
-  const ttl = Math.max(Number(ttlSeconds)||0, 60); // KV вимагає ≥ 60
+async function tryLock(env, key, ttlSeconds) {
   const exists = await env.KV.get(key);
   if (exists) return false;
-  await env.KV.put(key, '1', { expirationTtl: ttl });
+  await env.KV.put(key, '1', { expirationTtl: ttlSeconds || 10 });
   return true;
 }
-async function unlock(env, key){
+async function unlock(env, key) {
   await env.KV.delete(key);
 }
 
