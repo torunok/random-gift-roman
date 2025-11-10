@@ -416,66 +416,6 @@ a:hover {
     flex-wrap: wrap;
 }
 
-/* ====== Модальне вікно ====== */
-
-/* Візуальний вигляд модального вікна */
-#loginView.card {
-    width: 100%;
-    max-width: 380px;
-    padding: 28px 32px;
-    border-radius: 16px;
-    background: var(--panel);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-    text-align: center;
-}
-
-/* Поля вводу */
-#loginView .field {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-    margin-bottom: 18px;
-}
-
-#loginView input {
-    background: #1c1c1e;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 12px;
-    color: #fff;
-    font-size: 15px;
-}
-
-#loginView input:focus {
-    outline: none;
-    border-color: var(--accent);
-}
-
-/* Кнопка */
-#btnLogin {
-    width: 100%;
-    padding: 10px;
-    background: var(--accent);
-    color: #000;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.2s ease;
-}
-
-#btnLogin:hover {
-    background: #ffb14f;
-    transform: translateY(-1px);
-}
-
-/* Повідомлення */
-#loginMsg {
-    margin-top: 12px;
-    color: var(--muted);
-    font-size: 14px;
-}
-
 /* ====== Mobile tweaks ====== */
 @media (max-width: 640px) {
     .stage {
