@@ -1,6 +1,3 @@
-import imageCompression from 'browser-image-compression';
-
-
 const API = () => window.API_BASE?.replace(/\/$/, '') || '';
 const $ = (s, root = document) => root.querySelector(s);
 const $$ = (s, root = document) => Array.from(root.querySelectorAll(s));
