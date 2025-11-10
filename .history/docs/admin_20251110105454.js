@@ -61,6 +61,7 @@ async function loadGifts() {
     tbody.appendChild(tr);
   });
 
+  // делегування подій
   tbody.addEventListener('click', async (e) => {
     const b = e.target.closest('button'); if (!b) return;
     const id = Number(b.dataset.id);
@@ -84,7 +85,7 @@ function openGiftForm(item) {
   $('#giftImg').value = item?.imageUrl || '';
   $('#giftActive').checked = item ? !!item.active : true;
   $('#giftFormWrap').style.display = 'block';
-  refreshPreview();
+  refreshPreview(); // оновити прев’ю якщо є URL
 }
 
 async function saveGift() {
@@ -147,6 +148,8 @@ async function loadAssigns() {
 }
 
 // ===== Upload to R2 & Preview =====
+
+// автопрев’ю при зміні URL вручну
 $('#giftImg')?.addEventListener('input', refreshPreview);
 
 function refreshPreview() {
@@ -162,7 +165,7 @@ function refreshPreview() {
   }
 }
 
-// аплоад файлу у R2 через Worker (до 10MB)
+// аплоад файлу у R2 через Worker
 $('#btnUploadImage')?.addEventListener('click', async () => {
   const fileInput = $('#giftFile');
   const urlInput = $('#giftImg');
@@ -183,6 +186,7 @@ $('#btnUploadImage')?.addEventListener('click', async () => {
   try {
     const res = await apiUpload(file); // { url, key }
     urlInput.value = res.url;          // /img/gifts/....webp
+    // показати прев’ю
     const src = res.url.startsWith('http') ? res.url : (API() + res.url);
     preview.src = src;
     preview.style.display = 'block';
@@ -216,7 +220,7 @@ async function apiUpload(file) {
 // ===== Helpers =====
 function escapeHtml(str = '') { return str.replace(/[&<>"]+/g, s => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[s])); }
 
-// авто-перехід у адмін, якщо токен вже є
+// авто-перехід у адмін, якщо токен вже збережений
 if (token) {
   $('#loginView').classList.add('hidden');
   $('#adminView').classList.remove('hidden');
