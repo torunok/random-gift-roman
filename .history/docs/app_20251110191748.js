@@ -185,14 +185,14 @@ function showThanksForm() {
       <div class="photo slide-left ease-slow"><img src="./images/roman.png" alt="Roman"/></div>
       <div class="text slide-right ease-slow">
         <h2>Щиро вдячний!</h2>
-        <p>Буду радий розділити цей момент з тобою. А поки запиши свій нік у Telegram, щоб я пізніше повідомив дату, місце та час).</p>
+        <p>Буду радий розділити цей момент із вами. А поки запишіть свій нік у Telegram, щоб я пізніше повідомив дату, місце та час).</p>
       </div>
     </div>
   `);
 
   const form = el(`
     <div class="card fade-in ease-slow" style="margin-top:16px;">
-      <label class="field"><span>Твій Telegram-нік</span>
+      <label class="field"><span>Ваш Telegram-нік</span>
         <input id="tgNick" type="text" placeholder="@nickname" inputmode="text" autocomplete="username"
                required pattern="^@?[a-zA-Z0-9_]{3,}$" />
       </label>

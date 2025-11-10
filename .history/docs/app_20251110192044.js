@@ -192,7 +192,7 @@ function showThanksForm() {
 
   const form = el(`
     <div class="card fade-in ease-slow" style="margin-top:16px;">
-      <label class="field"><span>Твій Telegram-нік</span>
+      <label class="field"><span>Ваш Telegram-нік</span>
         <input id="tgNick" type="text" placeholder="@nickname" inputmode="text" autocomplete="username"
                required pattern="^@?[a-zA-Z0-9_]{3,}$" />
       </label>

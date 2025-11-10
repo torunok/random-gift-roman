@@ -466,11 +466,6 @@ body {
     font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial, sans-serif
 }
 
-body {
-    display: flex;
-    flex-direction: column;
-}
-
 
 .header {
     padding: 20px;
@@ -494,8 +489,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 60vh;
-    padding: 20px;
-    flex: 1;
+    padding: 20px
 }
 
 

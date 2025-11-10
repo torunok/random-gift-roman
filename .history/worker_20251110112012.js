@@ -205,30 +205,6 @@ export default {
         }
       }
 
-      // ===== NEW: Admin Assignments (Учасники) =====
-      if (url.pathname === '/api/admin/assignments') {
-        if (request.method === 'GET') {
-          const q = url.searchParams.get('q')?.trim();
-          let sql = "SELECT id, ipHash, name, telegram, giftId, createdAt FROM assignments";
-          let params = [];
-          if (q) {
-            sql += " WHERE (name LIKE ? OR telegram LIKE ?)";
-            const like = `%${q}%`;
-            params = [like, like];
-          }
-          sql += " ORDER BY id DESC LIMIT 500";
-          const list = await env.DB.prepare(sql).bind(...params).all();
-          return json({ items: list.results || [] }, corsHeaders);
-        }
-
-        if (request.method === 'DELETE') {
-          const id = url.searchParams.get('id');
-          if (!id) return json({ error: 'id_required' }, corsHeaders, 400);
-          await env.DB.prepare("DELETE FROM assignments WHERE id = ?").bind(id).run();
-          return json({ ok: true }, corsHeaders);
-        }
-      }
-
       // ===== АДМІН: аплоад через Worker → R2 (ліміт 10MB) =====
       if (url.pathname === '/api/admin/upload' && request.method === 'POST') {
         const ctype = request.headers.get('Content-Type') || '';
