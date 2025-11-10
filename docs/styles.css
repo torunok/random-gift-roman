@@ -53,7 +53,7 @@ a:hover {
 }
 
 .header--admin {
-    justify-content: flex-start;
+    justify-content: space-between;
 }
 
 .main {
