@@ -485,7 +485,7 @@ body {
 }
 
 .header--admin {
-    justify-content: space-between;
+    justify-content: flex-start
 }
 
 
