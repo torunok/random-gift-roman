@@ -10,7 +10,12 @@
     <link rel="stylesheet" href="./styles.css" />
     <style>
       .muted {
-        opacity: 0.8;
+        opacity: 0.75;
+      }
+      .row {
+        display: flex;
+        gap: 10px;
+        align-items: center;
       }
       .preview-img {
         max-width: 240px;
@@ -53,25 +58,20 @@
             <div class="card">
               <h2>Список подарунків</h2>
               <div class="actions">
-                <div class="btn-group">
-                  <button id="btnReloadGifts" class="btn btn-ghost">Оновити</button>
-                  <button id="btnNewGift" class="btn btn-primary">Додати</button>
-                </div>
+                <button id="btnReloadGifts" class="btn btn-ghost">Оновити</button>
+                <button id="btnNewGift" class="btn btn-primary">Додати</button>
               </div>
-
-              <div class="table-wrap">
-                <table class="table" id="giftsTable">
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Назва</th>
-                      <th>Активний</th>
-                      <th>Дії</th>
-                    </tr>
-                  </thead>
-                  <tbody></tbody>
-                </table>
-              </div>
+              <table class="table" id="giftsTable">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Назва</th>
+                    <th>Активний</th>
+                    <th>Дії</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
             </div>
 
             <div class="card" id="giftFormWrap" style="display: none">
@@ -92,8 +92,9 @@
                 <input id="giftImg" type="text" placeholder="https://... або /img/gifts/..." />
               </label>
 
+              <!-- Нове: аплоад у R2 -->
               <div class="field">
-                <label for="giftFile">Фото подарунка (jpeg/png/webp, до 10MB)</label>
+                <label for="giftFile">Фото подарунка (jpeg/png/webp, до 2MB)</label>
                 <input id="giftFile" type="file" accept="image/jpeg,image/png,image/webp" />
                 <div class="row" style="margin-top: 8px">
                   <button id="btnUploadImage" type="button" class="btn btn-ghost">Завантажити фото</button>
@@ -112,10 +113,8 @@
               </label>
 
               <div class="actions">
-                <div class="btn-group">
-                  <button id="btnSaveGift" class="btn btn-primary">Зберегти</button>
-                  <button id="btnCancelGift" class="btn btn-ghost">Скасувати</button>
-                </div>
+                <button id="btnSaveGift" class="btn btn-primary">Зберегти</button>
+                <button id="btnCancelGift" class="btn btn-ghost">Скасувати</button>
               </div>
             </div>
           </div>
@@ -127,22 +126,19 @@
                 <input id="searchAssign" type="text" placeholder="Пошук по імені / ніку" />
                 <button id="btnReloadAssign" class="btn btn-ghost">Оновити</button>
               </div>
-
-              <div class="table-wrap">
-                <table class="table" id="assignTable">
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Ім’я</th>
-                      <th>Telegram</th>
-                      <th>GiftID</th>
-                      <th>Час</th>
-                      <th>Дії</th>
-                    </tr>
-                  </thead>
-                  <tbody></tbody>
-                </table>
-              </div>
+              <table class="table" id="assignTable">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Ім’я</th>
+                    <th>Telegram</th>
+                    <th>GiftID</th>
+                    <th>Час</th>
+                    <th>Дії</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
             </div>
           </div>
         </section>

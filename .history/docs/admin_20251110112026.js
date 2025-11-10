@@ -55,16 +55,13 @@ async function loadGifts() {
       <td>${escapeHtml(g.title)}</td>
       <td>${g.active ? '✅' : '⛔'}</td>
       <td>
-        <div class="btn-group td-actions">
-          <button class="btn btn-ghost" data-act="edit" data-id="${g.id}">Редагувати</button>
-          <button class="btn btn-danger" data-act="del" data-id="${g.id}">Видалити</button>
-        </div>
+        <button class="btn btn-ghost" data-act="edit" data-id="${g.id}">Редагувати</button>
+        <button class="btn btn-ghost" data-act="del" data-id="${g.id}">Видалити</button>
       </td>`;
     tbody.appendChild(tr);
   });
 
-  // один делегований слухач на поточне тіло
-  tbody.onclick = async (e) => {
+  tbody.addEventListener('click', async (e) => {
     const b = e.target.closest('button'); if (!b) return;
     const id = Number(b.dataset.id);
     if (b.dataset.act === 'edit') {
@@ -76,7 +73,7 @@ async function loadGifts() {
         loadGifts();
       }
     }
-  };
+  }, { once: true });
 }
 
 function openGiftForm(item) {
@@ -135,22 +132,18 @@ async function loadAssigns() {
       <td>${escapeHtml(a.telegram || '')}</td>
       <td>${a.giftId}</td>
       <td>${a.createdAt}</td>
-      <td>
-        <div class="btn-group td-actions">
-          <button class="btn btn-danger" data-id="${a.id}">Видалити</button>
-        </div>
-      </td>`;
+      <td><button class="btn btn-ghost" data-id="${a.id}">Видалити</button></td>`;
     tbody.appendChild(tr);
   });
 
-  tbody.onclick = async (e) => {
+  tbody.addEventListener('click', async (e) => {
     const b = e.target.closest('button'); if (!b) return;
     const id = Number(b.dataset.id);
     if (confirm('Видалити призначення?')) {
       await fetch(API() + `/api/admin/assignments?id=${id}`, { method: 'DELETE', headers: setAuthHeader() });
       loadAssigns();
     }
-  };
+  }, { once: true });
 }
 
 // ===== Upload to R2 & Preview =====
@@ -169,6 +162,7 @@ function refreshPreview() {
   }
 }
 
+// аплоад файлу у R2 через Worker (до 10MB)
 $('#btnUploadImage')?.addEventListener('click', async () => {
   const fileInput = $('#giftFile');
   const urlInput = $('#giftImg');
