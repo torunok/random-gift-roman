@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Admin • Random Gift</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+<div class="admin">
+<header class="header header--admin">
+<h1>Admin • Random Gift</h1>
+</header>
+
+
+<main class="admin-main">
+<section id="loginView" class="card">
+<h2>Вхід</h2>
+<label class="field">
+<span>Логін</span>
+<input id="admUser" type="text" />
+</label>
+<label class="field">
+<span>Пароль</span>
+<input id="admPass" type="password" />
+</label>
+<div class="actions">
+<button id="btnLogin" class="btn btn-primary">Увійти</button>
+</div>
+<div id="loginMsg" class="msg"></div>
+</section>
+
+
+<section id="adminView" class="hidden">
+<div class="admin-tabs">
+<button data-tab="gifts" class="tab active">Подарунки</button>
+<button data-tab="participants" class="tab">Учасники</button>
+</div>
+
+
+<div id="tab-gifts" class="tabpane active">
+<div class="card">
+<h2>Список подарунків</h2>
+<div class="actions">
+<button id="btnReloadGifts" class="btn btn-ghost">Оновити</button>
+<button id="btnNewGift" class="btn btn-primary">Додати</button>
+</div>
+<div class="table-wrap">
+<table class="table" id="giftsTable">
+<thead>
+<tr>
+<th>ID</th>
+<th>Назва</th>
+<th>Активний</th>
+<th>Дії</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+</div>
+</div>
+
+
+<div class="card" id="giftFormWrap" style="display: none">
+</html>

@@ -1,0 +1,304 @@
+:root {
+    --bg: #0B0B0C;
+    --fg: #FFFFFF;
+    --muted: #999;
+    --accent: #FFA73B;
+    --panel: #121214;
+}
+
+
+* {
+    box-sizing: border-box
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial, sans-serif
+}
+
+
+.header {
+    padding: 20px;
+    display: flex;
+    justify-content: center
+}
+
+.header h1 {
+    font-size: 20px;
+    font-weight: 800;
+    margin: 0
+}
+
+.header--admin {
+    justify-content: flex-start
+}
+
+
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+    padding: 20px
+}
+
+
+/* НОВЕ: локальна обгортка для модалки над stage */
+.stage-wrap {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+
+.stage {
+    width: min(980px, 94vw);
+    min-height: 420px;
+    border-radius: 16px;
+    background: var(--panel);
+    padding: 24px;
+    position: relative;
+    /* зберігаємо */
+    overflow: hidden
+}
+
+
+.footer {
+    padding: 20px;
+    text-align: center;
+    color: var(--muted)
+}
+
+
+/* Модалка тепер локальна (лише над stage) */
+.modal {
+    position: absolute;
+    /* було fixed */
+    inset: 0;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, .7);
+    z-index: 50;
+}
+
+.modal[aria-hidden="true"] {
+    display: none
+}
+
+
+.modal-content {
+    background: var(--panel);
+    width: min(640px, 94vw);
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, .5)
+}
+
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 12px 0
+}
+
+.field input,
+.field textarea {
+    background: #0f0f10;
+    border: 1px solid #1c1c1e;
+    color: var(--fg);
+    border-radius: 10px;
+    padding: 12px
+}
+
+
+.check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 0;
+    color: var(--muted)
+}
+
+
+.actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px
+}
+
+
+.btn {
+    appearance: none;
+    border: 1px solid transparent;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer
+}
+
+.btn-primary {
+    background: var(--accent);
+    color: #1b1205
+}
+
+.btn-ghost {
+    background: transparent;
+    border-color: #2a2a2d;
+    color: var(--fg)
+}
+
+.btn:disabled {
+    opacity: .5;
+    cursor: not-allowed
+}
+
+
+.card {
+    background: var(--panel);
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, .3);
+    margin-bottom: 16px
+}
+
+
+.table {
+    width: 100%;
+    border-collapse: collapse
+}
+
+.table th,
+.table td {
+    border-bottom: 1px solid #1e1e22;
+    padding: 10px;
+    text-align: left
+}
+
+
+.hidden {
+    display: none
+}
+
+
+.row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin: 8px 0
+}
+
+
+/* Анімації */
+.fade-in {
+    animation: fade-in .5s ease forwards
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0
+    }
+
+    to {
+        opacity: 1
+    }
+}
+
+.slide-left {
+    animation: slide-left .6s ease forwards
+}
+
+@keyframes slide-left {
+    from {
+        opacity: 0;
+        transform: translateX(-30px)
+    }
+
+    to {
+        opacity: 1;
+        transform: none
+    }
+}
+
+.slide-right {
+    animation: slide-right .6s ease forwards
+}
+
+@keyframes slide-right {
+    from {
+        opacity: 0;
+        transform: translateX(30px)
+    }
+
+    to {
+        opacity: 1;
+        transform: none
+    }
+}
+
+.scale-in {
+    animation: scale-in .5s ease forwards
+}
+
+@keyframes scale-in {
+    from {
+        opacity: 0;
+        transform: scale(.92)
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1)
+    }
+}
+
+
+/* Спец екрани */
+.full-black {
+    position: absolute;
+    inset: 0;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 28px
+}
+
+
+.center {
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+
+/* Блок подарунку */
+.gift-wrap {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap
+}
+
+.gift-img {
+    max-width: min(60vw, 480px);
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, .6)
+}
+
+.gift-desc {
+    max-width: 520px;
+    background: #101012;
+    border: 1px solid #202026;
+    padding: 16px 20px;
+    border-radius: 12px
+}

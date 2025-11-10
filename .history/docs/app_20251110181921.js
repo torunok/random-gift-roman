@@ -146,36 +146,36 @@ async function startRandom() {
 }
 
 async function showGiftSequence(gift) {
-  stage.innerHTML = '';
+stage.innerHTML = '';
 
 
-  // 1) показ фото по центру
-  const first = el(`
-    <div class="center">
-      <img class="gift-img scale-in" id="giftImgCenter" src="${escapeHtml(absoluteUrl(gift.imageUrl))}" alt="gift"/>
-    </div>
-  `);
-  stage.appendChild(first);
-  await sleep(3000);
+// 1) показ фото по центру
+const first = el(`
+<div class="center">
+<img class="gift-img scale-in" id="giftImgCenter" src="${escapeHtml(absoluteUrl(gift.imageUrl))}" alt="gift"/>
+</div>
+`);
+stage.appendChild(first);
+await sleep(3000);
 
 
-  // 2) фото + опис + кнопка ПІД описом (22px)
-  stage.innerHTML = '';
-  const wrap = el(`
-    <div class="gift-wrap fade-in">
-      <img class="gift-img" src="${escapeHtml(absoluteUrl(gift.imageUrl))}" alt="gift"/>
-      <div class="gift-desc">
-        <h3>${escapeHtml(gift.title || 'Подарунок')}</h3>
-        <p>${escapeHtml(gift.description || 'Опис')}</p>
-        <button id="btnMore" class="btn btn-ghost" style="margin-top:22px;">І це все?</button>
-      </div>
-    </div>
-  `);
-  stage.appendChild(wrap);
+// 2) фото + опис + кнопка ПІД описом (22px)
+stage.innerHTML = '';
+const wrap = el(`
+<div class="gift-wrap fade-in">
+<img class="gift-img" src="${escapeHtml(absoluteUrl(gift.imageUrl))}" alt="gift"/>
+<div class="gift-desc">
+<h3>${escapeHtml(gift.title || 'Подарунок')}</h3>
+<p>${escapeHtml(gift.description || 'Опис')}</p>
+<button id="btnMore" class="btn btn-ghost" style="margin-top:22px;">І це все?</button>
+</div>
+</div>
+`);
+stage.appendChild(wrap);
 
 
-  // клік лише для цієї кнопки
-  wrap.querySelector('#btnMore').addEventListener('click', showThanksForm);
+// клік лише для цієї кнопки
+wrap.querySelector('#btnMore').addEventListener('click', showThanksForm);
 }
 
 function showThanksForm() {
