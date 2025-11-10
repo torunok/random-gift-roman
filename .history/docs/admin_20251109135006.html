@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin • Random Gift</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="admin">
+      <header class="header header--admin">
+        <h1>Admin • Random Gift</h1>
+      </header>
+
+      <main class="admin-main">
+        <section id="loginView" class="card">
+          <h2>Вхід</h2>
+          <label class="field">
+            <span>Логін</span>
+            <input id="admUser" type="text" />
+          </label>
+          <label class="field">
+            <span>Пароль</span>
+            <input id="admPass" type="password" />
+          </label>
+          <div class="actions">
+            <button id="btnLogin" class="btn btn-primary">Увійти</button>
+          </div>
+          <div id="loginMsg" class="msg"></div>
+        </section>
+
+        <section id="adminView" class="hidden">
+          <div class="admin-tabs">
+            <button data-tab="gifts" class="tab active">Подарунки</button>
+            <button data-tab="assignments" class="tab">Призначення</button>
+          </div>
+
+          <div id="tab-gifts" class="tabpane active">
+            <div class="card">
+              <h2>Список подарунків</h2>
+              <div class="actions">
+                <button id="btnReloadGifts" class="btn btn-ghost">Оновити</button>
+                <button id="btnNewGift" class="btn btn-primary">Додати</button>
+              </div>
+              <table class="table" id="giftsTable">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Назва</th>
+                    <th>Активний</th>
+                    <th>Дії</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+
+            <div class="card" id="giftFormWrap" style="display: none">
+              <h3 id="giftFormTitle">Новий подарунок</h3>
+              <label class="field"
+                ><span>Назва</span>
+                <input id="giftTitle" type="text" />
+              </label>
+              <label class="field"
+                ><span>Опис</span>
+                <textarea id="giftDesc" rows="4"></textarea>
+              </label>
+              <label class="field"
+                ><span>URL зображення</span>
+                <input id="giftImg" type="text" placeholder="https://..." />
+              </label>
+              <label class="check">
+                <input id="giftActive" type="checkbox" checked />
+                <span>Активний</span>
+              </label>
+              <div class="actions">
+                <button id="btnSaveGift" class="btn btn-primary">Зберегти</button>
+                <button id="btnCancelGift" class="btn btn-ghost">Скасувати</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="tab-assignments" class="tabpane">
+            <div class="card">
+              <h2>Призначення</h2>
+              <div class="row">
+                <input id="searchAssign" type="text" placeholder="Пошук по імені / ніку" />
+                <button id="btnReloadAssign" class="btn btn-ghost">Оновити</button>
+              </div>
+              <table class="table" id="assignTable">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Ім’я</th>
+                    <th>Telegram</th>
+                    <th>GiftID</th>
+                    <th>Час</th>
+                    <th>Дії</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      window.API_BASE = "https://random-gift-roman.myhappyb.workers.dev";
+    </script>
+    <script src="./admin.js" defer></script>
+  </body>
+</html>
