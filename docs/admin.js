@@ -167,10 +167,12 @@ function openGiftForm(item) {
   const desc  = $('#giftDesc');
   const img   = $('#giftImg');
   const active= $('#giftActive');
+  const stock = $('#giftStock');
   if (title)  title.value = item?.title || '';
   if (desc)   desc.value  = item?.description || '';
   if (img)    img.value   = item?.imageUrl || '';
   if (active) active.checked = item ? !!item.active : true;
+  if (stock)  stock.value = String(item?.stock ?? 1);
   const wrap = $('#giftFormWrap');
   if (wrap) wrap.style.display = 'block';
   refreshPreview();
@@ -182,7 +184,12 @@ async function saveGift() {
     title: ($('#giftTitle')?.value || '').trim(),
     description: ($('#giftDesc')?.value || '').trim(),
     imageUrl: ($('#giftImg')?.value || '').trim(),
-    active: $('#giftActive')?.checked ? 1 : 0
+    active: $('#giftActive')?.checked ? 1 : 0,
+    stock: (() => {
+      const raw = Number($('#giftStock')?.value ?? '0');
+      if (!Number.isFinite(raw) || raw < 0) return 0;
+      return Math.floor(raw);
+    })()
   };
   if (!payload.title) { alert('Назва обов’язкова'); return; }
 

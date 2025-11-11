@@ -1,3 +1,5 @@
+let giftSchemaReadyPromise = null;
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
@@ -28,6 +30,7 @@ export default {
     if (isPreflight) return new Response(null, { status: 204, headers: corsHeaders });
 
     try {
+      await ensureGiftStockColumn(env);
       // ===== ПУБЛІЧНІ API =====
 
       // Згода
@@ -400,4 +403,31 @@ function guessContentTypeByKey(key) {
   if (k.endsWith('.webp')) return 'image/webp';
   if (k.endsWith('.txt')) return 'text/plain; charset=utf-8';
   return null;
+}
+
+async function ensureGiftStockColumn(env) {
+  if (!giftSchemaReadyPromise) {
+    giftSchemaReadyPromise = (async () => {
+      const info = await env.DB.prepare('PRAGMA table_info(gifts);').all();
+      const cols = info?.results || [];
+      const hasStock = cols.some(col => col?.name === 'stock');
+      if (!hasStock) {
+        let added = false;
+        try {
+          await env.DB.prepare('ALTER TABLE gifts ADD COLUMN stock INTEGER NOT NULL DEFAULT 1').run();
+          added = true;
+        } catch (err) {
+          const msg = String(err?.message || err || '');
+          if (!/duplicate column/i.test(msg)) throw err;
+        }
+        if (added) {
+          await env.DB.prepare('UPDATE gifts SET stock = 1 WHERE stock IS NULL').run().catch(() => {});
+        }
+      }
+    })().catch(err => {
+      giftSchemaReadyPromise = null;
+      throw err;
+    });
+  }
+  return giftSchemaReadyPromise;
 }
