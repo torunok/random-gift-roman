@@ -180,7 +180,7 @@ async function showGiftSequence(gift) {
     <div class="gift-wrap fade-in">
       <img class="gift-img" src="${escapeHtml(absoluteUrl(gift.image))}" alt="gift"/>
       <div class="gift-desc">
-        <h3>${escapeHtml(gift.name || 'Подарунок')}</h3>
+        <h3>${escapeHtml(gift.title || 'Подарунок')}</h3>
         <p>${escapeHtml(gift.description || 'Опис')}</p>
         <button id="btnMore" class="btn btn-ghost" style="margin-top:22px;">Тицяй сюди!</button>
       </div>
@@ -260,7 +260,7 @@ function renderFinal(gift) {
     <div class="gift-wrap fade-in ease-slow">
       <img class="gift-img" src="${escapeHtml(absoluteUrl(gift.image || ''))}" alt="gift"/>
       <div class="gift-desc">
-        <h3>${escapeHtml(gift.name || 'Подарунок')}</h3>
+        <h3>${escapeHtml(gift.title || 'Подарунок')}</h3>
         <p>${escapeHtml(gift.description || 'Опис')}</p>
       </div>
     </div>

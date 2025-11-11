@@ -168,7 +168,7 @@ async function showGiftSequence(gift) {
   // 1) показ фото по центру
   const first = el(`
     <div class="center">
-      <img class="gift-img scale-in" id="giftImgCenter" src="${escapeHtml(absoluteUrl(gift.image))}" alt="gift"/>
+      <img class="gift-img scale-in" id="giftImgCenter" src="${escapeHtml(absoluteUrl(gift.imageUrl))}" alt="gift"/>
     </div>
   `);
   stage.appendChild(first);
@@ -178,9 +178,9 @@ async function showGiftSequence(gift) {
   stage.innerHTML = '';
   const wrap = el(`
     <div class="gift-wrap fade-in">
-      <img class="gift-img" src="${escapeHtml(absoluteUrl(gift.image))}" alt="gift"/>
+      <img class="gift-img" src="${escapeHtml(absoluteUrl(gift.imageUrl))}" alt="gift"/>
       <div class="gift-desc">
-        <h3>${escapeHtml(gift.name || 'Подарунок')}</h3>
+        <h3>${escapeHtml(gift.title || 'Подарунок')}</h3>
         <p>${escapeHtml(gift.description || 'Опис')}</p>
         <button id="btnMore" class="btn btn-ghost" style="margin-top:22px;">Тицяй сюди!</button>
       </div>
@@ -258,9 +258,9 @@ function renderFinal(gift) {
   stage.innerHTML = '';
   const block = el(`
     <div class="gift-wrap fade-in ease-slow">
-      <img class="gift-img" src="${escapeHtml(absoluteUrl(gift.image || ''))}" alt="gift"/>
+      <img class="gift-img" src="${escapeHtml(absoluteUrl(gift.imageUrl || ''))}" alt="gift"/>
       <div class="gift-desc">
-        <h3>${escapeHtml(gift.name || 'Подарунок')}</h3>
+        <h3>${escapeHtml(gift.title || 'Подарунок')}</h3>
         <p>${escapeHtml(gift.description || 'Опис')}</p>
       </div>
     </div>
