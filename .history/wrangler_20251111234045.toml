@@ -7,7 +7,7 @@ binding = "KV"
 id = "5ae998a2f15a4265bb0cf923d96ec16b"
 
 [[d1_databases]]
-binding = "DB"
+binding = "random_gift_db_v2"
 database_name = "random_gift_db_v2"
 database_id = "371a7a79-24ed-48af-b3bb-74ed6225823c"
 
