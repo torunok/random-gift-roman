@@ -43,18 +43,8 @@ function absoluteUrl(u = '') {
 }
 
 // ====== CONSENT ======
-function showConsent() {
-  consentModal?.setAttribute('aria-hidden', 'false');
-  // скеровуємо фокус всередину модалки
-  btnAgree?.focus();
-}
-function hideConsent() {
-  // ВАЖЛИВО: спершу скидаємо фокус, щоби не було ARIA-попередження
-  if (document.activeElement && typeof document.activeElement.blur === 'function') {
-    document.activeElement.blur();
-  }
-  consentModal?.setAttribute('aria-hidden', 'true');
-}
+function showConsent() { consentModal?.setAttribute('aria-hidden', 'false'); }
+function hideConsent() { consentModal?.setAttribute('aria-hidden', 'true'); }
 
 checkboxAgree?.addEventListener('change', () => {
   btnAgree.disabled = !(checkboxAgree.checked && inputName.value.trim().length >= 2);
@@ -140,21 +130,14 @@ async function startRandom() {
     return;
   }
 
-  // Коректна реакція на службові помилки бекенда
-  if (res && (res.error === 'no_active_gifts' || res.error === 'no_stock')) {
-    $('#blackOverlay')?.remove();
-    alert(
-      res.error === 'no_stock'
-        ? 'Немає доступних подарунків зі stock > 0. Додай/онови в адмінці.'
-        : 'Немає активних подарунків. Увімкни хоча б один у адмінці.'
-    );
-    return;
-  }
-
   const gift = res?.gift || (res?.already ? res.gift : null);
   if (!gift || !gift.imageUrl) {
     $('#blackOverlay')?.remove();
-    alert('Подарунок не отримано. Спробуй ще раз або перевір дані в адмінці.');
+    if (res && res.error === 'no_active_gifts') {
+      alert('Немає активних подарунків. Увімкни хоча б один у адмінці.');
+    } else {
+      alert('Подарунок не отримано. Спробуй ще раз або перевір дані в адмінці.');
+    }
     return;
   }
 
@@ -165,6 +148,7 @@ async function startRandom() {
 async function showGiftSequence(gift) {
   stage.innerHTML = '';
 
+
   // 1) показ фото по центру
   const first = el(`
     <div class="center">
@@ -173,6 +157,7 @@ async function showGiftSequence(gift) {
   `);
   stage.appendChild(first);
   await sleep(3000);
+
 
   // 2) фото + опис + кнопка ПІД описом (22px)
   stage.innerHTML = '';
@@ -187,6 +172,7 @@ async function showGiftSequence(gift) {
     </div>
   `);
   stage.appendChild(wrap);
+
 
   // клік лише для цієї кнопки
   wrap.querySelector('#btnMore').addEventListener('click', showThanksForm);

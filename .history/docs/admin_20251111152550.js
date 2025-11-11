@@ -1,4 +1,5 @@
-// ========================= ADMIN JS =========================
+// ========================= ADMIN JS (нижче) =========================
+
 const API = () => window.API_BASE?.replace(/\/$/, '') || '';
 const $   = (s, root = document) => root.querySelector(s);
 const $$  = (s, root = document) => Array.from(root.querySelectorAll(s));
@@ -25,6 +26,7 @@ async function fetchAuth(input, init = {}) {
     token = '';
     $('#adminView')?.classList.add('hidden');
     $('#loginView')?.classList.remove('hidden');
+    // спробуємо підказку
     const t = await res.text().catch(()=> '');
     const msg = t && t[0] === '{' ? (safeJson(t).error || 'unauthorized') : 'unauthorized';
     $('#loginMsg').textContent = 'Сесія завершена. Увійдіть знову. (' + msg + ')';
@@ -48,7 +50,7 @@ function bindTabs() {
       const pane = $('#tab-' + btn.dataset.tab);
       if (pane) pane.classList.add('active');
 
-      if (btn.dataset.tab === 'gifts')        await loadGifts();
+      if (btn.dataset.tab === 'gifts')       await loadGifts();
       if (btn.dataset.tab === 'participants') await loadAssigns();
     });
   });
@@ -105,7 +107,7 @@ async function loadGifts() {
   const tbody = $('#giftsTable tbody');
   if (!tbody) return;
 
-  tbody.innerHTML = '<tr><td colspan="5">Завантаження…</td></tr>';
+  tbody.innerHTML = '<tr><td colspan="4">Завантаження…</td></tr>';
 
   try {
     const r = await fetchAuth(base + '/api/admin/gifts');
@@ -113,17 +115,18 @@ async function loadGifts() {
     const j = safeJson(t);
     const items = j.items || [];
 
+    console.log('Gifts:', items.length);
     tbody.innerHTML = '';
 
     items.forEach(g => {
       const tr = document.createElement('tr');
+      // Показуємо stock як бейдж у колонці з назвою (щоб не міняти заголовки таблиці)
       tr.innerHTML = `
         <td>${g.id}</td>
-        <td>${escapeHtml(g.title || '')}</td>
-        <td>${typeof g.stock === 'number' ? g.stock : (g.stock ?? 0)}</td>
+        <td>${escapeHtml(g.title)} ${typeof g.stock === 'number' ? `<small class="muted">· stock: ${g.stock}</small>` : ''}</td>
         <td>${g.active ? '✅' : '⛔'}</td>
-        <td class="td-actions">
-          <div class="btn-group">
+        <td>
+          <div class="btn-group td-actions">
             <button class="btn btn-ghost" data-act="edit" data-id="${g.id}">Редагувати</button>
             <button class="btn btn-ghost" data-act="del"  data-id="${g.id}">Видалити</button>
           </div>
@@ -133,7 +136,7 @@ async function loadGifts() {
     });
 
     if (!items.length) {
-      tbody.innerHTML = '<tr><td colspan="5">Поки порожньо</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="4">Поки порожньо</td></tr>';
     }
 
     tbody.onclick = async (e) => {
@@ -155,7 +158,7 @@ async function loadGifts() {
 
   } catch (e) {
     console.warn('Gifts load error:', e);
-    tbody.innerHTML = '<tr><td colspan="5">Помилка завантаження</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="4">Помилка завантаження</td></tr>';
   }
 }
 
@@ -239,6 +242,7 @@ async function loadAssigns() {
     const j = safeJson(t);
     const items = j.items || [];
 
+    console.log('Assignments:', items.length);
     tbody.innerHTML = '';
 
     items.forEach(a => {
@@ -249,8 +253,8 @@ async function loadAssigns() {
         <td>${escapeHtml(a.telegram || '')}</td>
         <td>${a.giftId ?? ''}</td>
         <td>${a.createdAt ?? ''}</td>
-        <td class="td-actions">
-          <div class="btn-group">
+        <td>
+          <div class="btn-group td-actions">
             <button class="btn btn-ghost" data-id="${a.id}">Видалити</button>
           </div>
         </td>
@@ -339,7 +343,7 @@ $('#btnUploadImage')?.addEventListener('click', async () => {
 
 /* ===================== HELPERS ===================== */
 function escapeHtml(str = '') {
-  return String(str).replace(/[&<>"]+/g, s => ({
+  return str.replace(/[&<>"]+/g, s => ({
     '&': '&amp;',
     '<': '&lt;',
     '>' : '&gt;',
