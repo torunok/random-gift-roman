@@ -1,0 +1,109 @@
+PRAGMA defer_foreign_keys=TRUE;
+CREATE TABLE assignments (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  ipHash TEXT UNIQUE,
+  name TEXT,
+  telegram TEXT,
+  giftId INTEGER,
+  createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+INSERT INTO "assignments" VALUES(22,'03292ac79fe105d0d32bedc8c10350595bfc8f73042d56b9ea5e3c1ea0f707b9','апораап',NULL,NULL,'2025-11-10 20:32:32');
+INSERT INTO "assignments" VALUES(23,'7fcf0f173063a191afef222f613dcbd6c27f0ae4611f4160e2729282f8ab2dc4','Vcfv',NULL,NULL,'2025-11-10 20:32:52');
+INSERT INTO "assignments" VALUES(24,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','пвап',NULL,NULL,'2025-11-11 12:12:09');
+CREATE TABLE logs (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  ipHash TEXT,
+  action TEXT,
+  ts DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+INSERT INTO "logs" VALUES(1,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-09 12:11:15');
+INSERT INTO "logs" VALUES(2,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 06:04:06');
+INSERT INTO "logs" VALUES(3,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 06:06:05');
+INSERT INTO "logs" VALUES(4,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 06:09:39');
+INSERT INTO "logs" VALUES(5,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 07:19:44');
+INSERT INTO "logs" VALUES(6,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 07:33:37');
+INSERT INTO "logs" VALUES(7,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 07:38:47');
+INSERT INTO "logs" VALUES(8,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 07:40:34');
+INSERT INTO "logs" VALUES(9,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','random','2025-11-10 07:40:42');
+INSERT INTO "logs" VALUES(10,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','finalize','2025-11-10 07:41:06');
+INSERT INTO "logs" VALUES(11,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 07:42:26');
+INSERT INTO "logs" VALUES(12,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 07:53:35');
+INSERT INTO "logs" VALUES(13,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 07:59:19');
+INSERT INTO "logs" VALUES(14,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 07:59:42');
+INSERT INTO "logs" VALUES(15,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','random','2025-11-10 07:59:49');
+INSERT INTO "logs" VALUES(16,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 08:03:08');
+INSERT INTO "logs" VALUES(17,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 08:03:47');
+INSERT INTO "logs" VALUES(18,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','random','2025-11-10 08:05:00');
+INSERT INTO "logs" VALUES(19,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 09:00:31');
+INSERT INTO "logs" VALUES(20,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','random','2025-11-10 09:00:51');
+INSERT INTO "logs" VALUES(21,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','finalize','2025-11-10 09:01:32');
+INSERT INTO "logs" VALUES(22,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 09:06:49');
+INSERT INTO "logs" VALUES(23,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 09:28:06');
+INSERT INTO "logs" VALUES(24,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','random','2025-11-10 09:28:26');
+INSERT INTO "logs" VALUES(25,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','finalize','2025-11-10 09:29:14');
+INSERT INTO "logs" VALUES(26,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 09:29:51');
+INSERT INTO "logs" VALUES(27,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','random','2025-11-10 09:30:03');
+INSERT INTO "logs" VALUES(28,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','finalize','2025-11-10 09:30:31');
+INSERT INTO "logs" VALUES(29,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 13:03:01');
+INSERT INTO "logs" VALUES(30,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','random','2025-11-10 13:03:17');
+INSERT INTO "logs" VALUES(31,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 13:05:40');
+INSERT INTO "logs" VALUES(32,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','random','2025-11-10 13:05:51');
+INSERT INTO "logs" VALUES(33,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 13:12:12');
+INSERT INTO "logs" VALUES(34,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','random','2025-11-10 13:12:21');
+INSERT INTO "logs" VALUES(35,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 13:13:56');
+INSERT INTO "logs" VALUES(36,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','random','2025-11-10 13:14:07');
+INSERT INTO "logs" VALUES(37,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 13:15:04');
+INSERT INTO "logs" VALUES(38,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','random','2025-11-10 13:15:11');
+INSERT INTO "logs" VALUES(39,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','finalize','2025-11-10 13:26:04');
+INSERT INTO "logs" VALUES(40,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 13:26:30');
+INSERT INTO "logs" VALUES(41,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','random','2025-11-10 13:26:39');
+INSERT INTO "logs" VALUES(42,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 16:05:23');
+INSERT INTO "logs" VALUES(43,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','random','2025-11-10 16:05:43');
+INSERT INTO "logs" VALUES(44,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 16:38:56');
+INSERT INTO "logs" VALUES(45,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 17:09:09');
+INSERT INTO "logs" VALUES(46,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 17:11:04');
+INSERT INTO "logs" VALUES(47,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 17:19:19');
+INSERT INTO "logs" VALUES(48,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','random','2025-11-10 17:19:39');
+INSERT INTO "logs" VALUES(49,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','finalize','2025-11-10 17:21:57');
+INSERT INTO "logs" VALUES(50,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 17:56:06');
+INSERT INTO "logs" VALUES(51,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','random','2025-11-10 17:56:23');
+INSERT INTO "logs" VALUES(52,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','finalize','2025-11-10 18:03:59');
+INSERT INTO "logs" VALUES(53,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 18:52:00');
+INSERT INTO "logs" VALUES(54,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 18:56:51');
+INSERT INTO "logs" VALUES(55,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','random','2025-11-10 18:57:06');
+INSERT INTO "logs" VALUES(56,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','finalize','2025-11-10 18:58:21');
+INSERT INTO "logs" VALUES(57,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-10 19:39:03');
+INSERT INTO "logs" VALUES(58,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','random','2025-11-10 19:39:15');
+INSERT INTO "logs" VALUES(59,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','finalize','2025-11-10 19:43:09');
+INSERT INTO "logs" VALUES(60,'50e3717910f38d7f22564394ac40ca13f742fde4a546a1685430d6e70d4692e4','agree','2025-11-10 19:45:13');
+INSERT INTO "logs" VALUES(61,'50e3717910f38d7f22564394ac40ca13f742fde4a546a1685430d6e70d4692e4','random','2025-11-10 19:45:25');
+INSERT INTO "logs" VALUES(62,'50e3717910f38d7f22564394ac40ca13f742fde4a546a1685430d6e70d4692e4','finalize','2025-11-10 19:45:47');
+INSERT INTO "logs" VALUES(63,'03292ac79fe105d0d32bedc8c10350595bfc8f73042d56b9ea5e3c1ea0f707b9','agree','2025-11-10 19:47:01');
+INSERT INTO "logs" VALUES(64,'03292ac79fe105d0d32bedc8c10350595bfc8f73042d56b9ea5e3c1ea0f707b9','random','2025-11-10 19:47:08');
+INSERT INTO "logs" VALUES(65,'03292ac79fe105d0d32bedc8c10350595bfc8f73042d56b9ea5e3c1ea0f707b9','finalize','2025-11-10 19:47:24');
+INSERT INTO "logs" VALUES(66,'03292ac79fe105d0d32bedc8c10350595bfc8f73042d56b9ea5e3c1ea0f707b9','agree','2025-11-10 20:32:32');
+INSERT INTO "logs" VALUES(67,'7fcf0f173063a191afef222f613dcbd6c27f0ae4611f4160e2729282f8ab2dc4','agree','2025-11-10 20:32:51');
+INSERT INTO "logs" VALUES(68,'03292ac79fe105d0d32bedc8c10350595bfc8f73042d56b9ea5e3c1ea0f707b9','agree','2025-11-10 20:33:30');
+INSERT INTO "logs" VALUES(69,'03292ac79fe105d0d32bedc8c10350595bfc8f73042d56b9ea5e3c1ea0f707b9','agree','2025-11-10 20:34:05');
+INSERT INTO "logs" VALUES(70,'03292ac79fe105d0d32bedc8c10350595bfc8f73042d56b9ea5e3c1ea0f707b9','agree','2025-11-10 20:34:23');
+INSERT INTO "logs" VALUES(71,'03292ac79fe105d0d32bedc8c10350595bfc8f73042d56b9ea5e3c1ea0f707b9','agree','2025-11-10 20:40:42');
+INSERT INTO "logs" VALUES(72,'03292ac79fe105d0d32bedc8c10350595bfc8f73042d56b9ea5e3c1ea0f707b9','agree','2025-11-10 20:42:17');
+INSERT INTO "logs" VALUES(73,'7fcf0f173063a191afef222f613dcbd6c27f0ae4611f4160e2729282f8ab2dc4','agree','2025-11-10 20:45:22');
+INSERT INTO "logs" VALUES(74,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-11 12:12:09');
+INSERT INTO "logs" VALUES(75,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-11 12:42:49');
+INSERT INTO "logs" VALUES(76,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-11 12:59:37');
+INSERT INTO "logs" VALUES(77,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-11 13:01:28');
+INSERT INTO "logs" VALUES(78,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-11 13:42:44');
+INSERT INTO "logs" VALUES(79,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-11 13:43:13');
+INSERT INTO "logs" VALUES(80,'b7144143cb5eb0fcc7b56e3f745063c7bbdda43fac8cba2c7ebb10ef05cc2c22','agree','2025-11-11 14:02:38');
+CREATE TABLE IF NOT EXISTS "gifts_old" (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, image TEXT, duration INTEGER DEFAULT 0, stock INTEGER DEFAULT 1);
+INSERT INTO "gifts_old" VALUES(1,'Test Gift','Тестовий подарунок','test.png',60,1);
+CREATE TABLE gifts (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, description TEXT, imageUrl TEXT, stock INTEGER DEFAULT 1, active INTEGER DEFAULT 1);
+INSERT INTO "gifts" VALUES(1,'Test Gift','Тестовий подарунок','test.png',5,1);
+DELETE FROM sqlite_sequence;
+INSERT INTO "sqlite_sequence" VALUES('logs',80);
+INSERT INTO "sqlite_sequence" VALUES('assignments',24);
+INSERT INTO "sqlite_sequence" VALUES('gifts_old',1);
+INSERT INTO "sqlite_sequence" VALUES('gifts',1);
+CREATE INDEX idx_assignments_ip ON assignments(ipHash);
+CREATE INDEX idx_assignments_gift ON assignments(giftId);
