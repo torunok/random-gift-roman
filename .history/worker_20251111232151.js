@@ -12,7 +12,7 @@ export default {
     // === Preflight ===
     if (isPreflight) return new Response(null, { status: 204, headers: cors });
 
-    // === Static imageUrls from R2 ===
+    // === Static images from R2 ===
     if (url.pathtitle.startsWith("/img/")) {
       try {
         const key = url.pathtitle.replace(/^\/img\//, "");
@@ -42,7 +42,7 @@ export default {
         // якщо вже є призначення
         const existing = await env.DB.prepare("SELECT giftId FROM assignments WHERE ipHash = ?").bind(ipHash).first();
         if (existing?.giftId) {
-          const gift = await env.DB.prepare("SELECT id, title, description, imageUrl FROM gifts WHERE id = ?")
+          const gift = await env.DB.prepare("SELECT id, title, description, image FROM gifts WHERE id = ?")
             .bind(existing.giftId)
             .first();
           return json({ already: true, gift }, cors);
@@ -57,7 +57,7 @@ export default {
 
           // вибір випадкового подарунку зі stock>0
           const pick = await env.DB.prepare(
-            "SELECT id, title, description, imageUrl FROM gifts WHERE stock > 0 ORDER BY RANDOM() LIMIT 1"
+            "SELECT id, title, description, image FROM gifts WHERE stock > 0 ORDER BY RANDOM() LIMIT 1"
           ).first();
           if (!pick) {
             await env.DB.exec("ROLLBACK");
@@ -115,9 +115,9 @@ function json(data, cors = {}, status = 200) {
 }
 function guessContentTypeByKey(key) {
   const k = key.toLowerCase();
-  if (k.endsWith(".jpg") || k.endsWith(".jpeg")) return "imageUrl/jpeg";
-  if (k.endsWith(".png")) return "imageUrl/png";
-  if (k.endsWith(".webp")) return "imageUrl/webp";
+  if (k.endsWith(".jpg") || k.endsWith(".jpeg")) return "image/jpeg";
+  if (k.endsWith(".png")) return "image/png";
+  if (k.endsWith(".webp")) return "image/webp";
   if (k.endsWith(".txt")) return "text/plain; charset=utf-8";
   return null;
 }
@@ -132,7 +132,7 @@ async function ensureSchema(env) {
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           title TEXT,
           description TEXT,
-          imageUrl TEXT,
+          image TEXT,
           stock INTEGER DEFAULT 1
         );
       `);
