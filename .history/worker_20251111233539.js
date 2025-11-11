@@ -34,7 +34,7 @@ export default {
       await ensureSchema(env);
 
       // === RANDOM API ===
-      if (url.pathname === "/api/random" && request.method === "GET") {
+      if (url.pathtitle === "/api/random" && request.method === "GET") {
         const ipHash = await getIpHash(request, env.SALT);
         const ua = request.headers.get("User-Agent") || "";
         console.log("random:start", { ipHash: ipHash.slice(0, 12), ua });

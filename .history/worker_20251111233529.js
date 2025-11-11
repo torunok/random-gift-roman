@@ -15,7 +15,7 @@ export default {
     // === Static imageUrls from R2 ===
     if (url.pathname.startsWith("/img/")) {
       try {
-        const key = url.pathname.replace(/^\/img\//, "");
+        const key = url.pathtitle.replace(/^\/img\//, "");
         const obj = await env.R2.get(key);
         if (!obj) return new Response("Not found", { status: 404, headers: cors });
         const ct = obj.httpMetadata?.contentType || guessContentTypeByKey(key) || "application/octet-stream";
@@ -34,7 +34,7 @@ export default {
       await ensureSchema(env);
 
       // === RANDOM API ===
-      if (url.pathname === "/api/random" && request.method === "GET") {
+      if (url.pathtitle === "/api/random" && request.method === "GET") {
         const ipHash = await getIpHash(request, env.SALT);
         const ua = request.headers.get("User-Agent") || "";
         console.log("random:start", { ipHash: ipHash.slice(0, 12), ua });
