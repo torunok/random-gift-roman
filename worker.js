@@ -30,8 +30,10 @@ export default {
     }
 
     try {
+      const db = getDatabase(env);
+
       // гарантуємо наявність таблиць
-      await ensureSchema(env);
+      await ensureSchema(db);
 
       // === RANDOM API ===
       if (url.pathname === "/api/random" && request.method === "GET") {
@@ -40,9 +42,10 @@ export default {
         console.log("random:start", { ipHash: ipHash.slice(0, 12), ua });
 
         // якщо вже є призначення
-        const existing = await env.random_gift_db_v2.prepare("SELECT giftId FROM assignments WHERE ipHash = ?").bind(ipHash).first();
+        const existing = await db.prepare("SELECT giftId FROM assignments WHERE ipHash = ?").bind(ipHash).first();
         if (existing?.giftId) {
-          const gift = await env.random_gift_db_v2.prepare("SELECT id, title, description, imageUrl FROM gifts WHERE id = ?")
+          const gift = await db
+            .prepare("SELECT id, title, description, imageUrl FROM gifts WHERE id = ?")
             .bind(existing.giftId)
             .first();
           return json({ already: true, gift }, cors);
@@ -53,32 +56,33 @@ export default {
         if (!gotLock) return json({ error: "busy" }, cors, 429);
 
         try {
-          await env.random_gift_db_v2.exec("BEGIN IMMEDIATE");
+          await runStatement(db, "BEGIN IMMEDIATE");
 
           // вибір випадкового подарунку зі stock>0
-          const pick = await env.random_gift_db_v2.prepare(
-            "SELECT id, title, description, imageUrl FROM gifts WHERE stock > 0 ORDER BY RANDOM() LIMIT 1"
-          ).first();
+          const pick = await db
+            .prepare("SELECT id, title, description, imageUrl FROM gifts WHERE stock > 0 ORDER BY RANDOM() LIMIT 1")
+            .first();
           if (!pick) {
-            await env.random_gift_db_v2.exec("ROLLBACK");
+            await runStatement(db, "ROLLBACK");
             return json({ error: "no_stock" }, cors, 409);
           }
 
-          await env.random_gift_db_v2.prepare("UPDATE gifts SET stock = stock - 1 WHERE id = ? AND stock > 0")
+          await db
+            .prepare("UPDATE gifts SET stock = stock - 1 WHERE id = ? AND stock > 0")
             .bind(pick.id)
             .run();
 
-          await env.random_gift_db_v2.prepare("INSERT INTO assignments(ipHash, giftId) VALUES(?, ?)").bind(ipHash, pick.id).run();
-          await env.random_gift_db_v2.prepare("INSERT INTO logs(ipHash, action) VALUES(?, 'random')").bind(ipHash).run();
+          await db.prepare("INSERT INTO assignments(ipHash, giftId) VALUES(?, ?)").bind(ipHash, pick.id).run();
+          await db.prepare("INSERT INTO logs(ipHash, action) VALUES(?, 'random')").bind(ipHash).run();
 
-          await env.random_gift_db_v2.exec("COMMIT");
+          await runStatement(db, "COMMIT");
           console.log("random:tx_commit", pick.id);
 
           return json({ gift: pick }, cors);
         } catch (e) {
           console.error("random:error", e?.message || e);
           try {
-            await env.random_gift_db_v2.exec("ROLLBACK");
+            await runStatement(db, "ROLLBACK");
           } catch {}
           return json({ error: String(e?.message || e) }, cors, 500);
         } finally {
@@ -123,11 +127,13 @@ function guessContentTypeByKey(key) {
 }
 
 /* ====== SCHEMA INIT ====== */
-async function ensureSchema(env) {
+async function ensureSchema(db) {
   if (!schemaReadyPromise) {
     schemaReadyPromise = (async () => {
       // створюємо таблиці, якщо немає
-      await env.random_gift_db_v2.exec(`
+      await runStatement(
+        db,
+        `
         CREATE TABLE IF NOT EXISTS gifts (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           title TEXT,
@@ -135,23 +141,30 @@ async function ensureSchema(env) {
           imageUrl TEXT,
           stock INTEGER DEFAULT 1
         );
-      `);
-      await env.random_gift_db_v2.exec(`
+      `
+      );
+      await runStatement(
+        db,
+        `
         CREATE TABLE IF NOT EXISTS assignments (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           ipHash TEXT,
           giftId INTEGER,
           createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
         );
-      `);
-      await env.random_gift_db_v2.exec(`
+      `
+      );
+      await runStatement(
+        db,
+        `
         CREATE TABLE IF NOT EXISTS logs (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           ipHash TEXT,
           action TEXT,
           createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
         );
-      `);
+      `
+      );
     })();
   }
   return schemaReadyPromise;
@@ -174,4 +187,20 @@ async function tryLock(env, key, ttlSeconds) {
 }
 async function unlock(env, key) {
   await env.KV.delete(key);
+}
+
+function getDatabase(env) {
+  const direct = env?.DB;
+  if (direct) return direct;
+  const beta = env?.__D1_BETA__;
+  if (beta) {
+    if (beta.DB) return beta.DB;
+    const first = Object.values(beta)[0];
+    if (first) return first;
+  }
+  throw new Error("D1 binding missing (env.DB)");
+}
+
+async function runStatement(db, sql) {
+  await db.prepare(sql).run();
 }
