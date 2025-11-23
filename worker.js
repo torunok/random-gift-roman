@@ -62,12 +62,13 @@ async function handleAgree(request, env, cors, db) {
   const name = sanitizeName(body?.name);
   const telegram = body?.telegram ? sanitizeTelegram(body.telegram) : null;
   const ipHash = await getIpHash(request, env.SALT);
+  const clientId = getClientId(request);
 
-  const existing = await getAssignmentByHash(db, ipHash);
+  const existing = await getAssignment(db, ipHash, clientId);
   if (existing) {
-    await db.prepare("UPDATE assignments SET name = ?, telegram = ? WHERE id = ?").bind(name, telegram, existing.id).run();
+    await db.prepare("UPDATE assignments SET name = ?, telegram = ?, clientId = ? WHERE id = ?").bind(name, telegram, clientId, existing.id).run();
   } else {
-    await db.prepare("INSERT INTO assignments (ipHash, name, telegram) VALUES (?, ?, ?)").bind(ipHash, name, telegram).run();
+    await db.prepare("INSERT INTO assignments (ipHash, name, telegram, clientId) VALUES (?, ?, ?, ?)").bind(ipHash, name, telegram, clientId).run();
   }
   await logAction(db, ipHash, "agree");
 
@@ -76,20 +77,8 @@ async function handleAgree(request, env, cors, db) {
 
 async function handleMe(request, env, cors, db) {
   const ipHash = await getIpHash(request, env.SALT);
-  const row = await db
-    .prepare(
-      `
-        SELECT a.id, a.name, a.telegram, a.giftId,
-               g.title, g.description, g.imageUrl
-        FROM assignments a
-        LEFT JOIN gifts g ON g.id = a.giftId
-        WHERE a.ipHash = ?
-        ORDER BY a.id DESC
-        LIMIT 1
-      `
-    )
-    .bind(ipHash)
-    .first();
+  const clientId = getClientId(request);
+  const row = await getAssignment(db, ipHash, clientId);
 
   if (!row) {
     return json({ assigned: false }, cors);
@@ -111,11 +100,9 @@ async function handleFinalize(request, env, cors, db) {
   const body = await readJson(request);
   const telegram = sanitizeTelegram(body?.telegram);
   const ipHash = await getIpHash(request, env.SALT);
+  const clientId = getClientId(request);
 
-  const assignment = await db
-    .prepare("SELECT id, giftId FROM assignments WHERE ipHash = ? ORDER BY id DESC LIMIT 1")
-    .bind(ipHash)
-    .first();
+  const assignment = await getAssignment(db, ipHash, clientId);
   if (!assignment || !assignment.giftId) {
     throw httpError(409, "gift_not_assigned");
   }
@@ -128,23 +115,11 @@ async function handleFinalize(request, env, cors, db) {
 
 async function handleRandom(request, env, cors, db) {
   const ipHash = await getIpHash(request, env.SALT);
+  const clientId = getClientId(request);
   const ua = request.headers.get("User-Agent") || "";
   console.log("random:start", { ipHash: ipHash.slice(0, 12), ua });
 
-  const existing = await db
-    .prepare(
-      `
-        SELECT a.id, a.giftId,
-               g.title, g.description, g.imageUrl
-        FROM assignments a
-        LEFT JOIN gifts g ON g.id = a.giftId
-        WHERE a.ipHash = ?
-        ORDER BY a.id DESC
-        LIMIT 1
-      `
-    )
-    .bind(ipHash)
-    .first();
+  const existing = await getAssignment(db, ipHash, clientId);
 
   if (existing?.giftId) {
     return json({ already: true, gift: mapGiftForClient({ id: existing.giftId, title: existing.title, description: existing.description, imageUrl: existing.imageUrl }) }, cors);
@@ -165,8 +140,8 @@ async function handleRandom(request, env, cors, db) {
     const statements = [
       db.prepare("UPDATE gifts SET stock = stock - 1 WHERE id = ? AND stock > 0").bind(pick.id),
       existing
-        ? db.prepare("UPDATE assignments SET giftId = ? WHERE id = ?").bind(pick.id, existing.id)
-        : db.prepare("INSERT INTO assignments(ipHash, giftId) VALUES(?, ?)").bind(ipHash, pick.id),
+        ? db.prepare("UPDATE assignments SET giftId = ?, clientId = ? WHERE id = ?").bind(pick.id, clientId, existing.id)
+        : db.prepare("INSERT INTO assignments(ipHash, clientId, giftId) VALUES(?, ?, ?)").bind(ipHash, clientId, pick.id),
       db.prepare("INSERT INTO logs(ipHash, action) VALUES(?, 'random')").bind(ipHash),
     ];
 
@@ -427,6 +402,7 @@ async function ensureSchema(db) {
         CREATE TABLE IF NOT EXISTS assignments (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           ipHash TEXT NOT NULL,
+          clientId TEXT,
           name TEXT,
           telegram TEXT,
           giftId INTEGER,
@@ -446,6 +422,8 @@ async function ensureSchema(db) {
       await ensureColumn(db, "gifts", "stock", "INTEGER NOT NULL DEFAULT 1");
       await ensureColumn(db, "assignments", "name", "TEXT");
       await ensureColumn(db, "assignments", "telegram", "TEXT");
+      await ensureColumn(db, "assignments", "clientId", "TEXT");
+      await execSql(db, "CREATE INDEX IF NOT EXISTS idx_assignments_client ON assignments(clientId)");
     })();
   }
   return schemaReadyPromise;
@@ -491,6 +469,10 @@ async function getIpHash(request, salt) {
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
 }
+function getClientId(request) {
+  const raw = (request.headers.get("X-Client-Id") || "").trim();
+  return raw || null;
+}
 
 async function tryLock(env, key, ttlSeconds) {
   if (!env.KV) throw new Error("KV binding missing");
@@ -506,8 +488,37 @@ async function unlock(env, key) {
   } catch {}
 }
 
-async function getAssignmentByHash(db, ipHash) {
-  return db.prepare("SELECT id, name, telegram, giftId FROM assignments WHERE ipHash = ? ORDER BY id DESC LIMIT 1").bind(ipHash).first();
+async function getAssignment(db, ipHash, clientId) {
+  if (clientId) {
+    return db
+      .prepare(
+        `
+        SELECT a.id, a.name, a.telegram, a.giftId, a.clientId,
+               g.title, g.description, g.imageUrl
+        FROM assignments a
+        LEFT JOIN gifts g ON g.id = a.giftId
+        WHERE a.ipHash = ? OR (a.clientId IS NOT NULL AND a.clientId = ?)
+        ORDER BY a.id DESC
+        LIMIT 1
+      `
+      )
+      .bind(ipHash, clientId)
+      .first();
+  }
+  return db
+    .prepare(
+      `
+        SELECT a.id, a.name, a.telegram, a.giftId, a.clientId,
+               g.title, g.description, g.imageUrl
+        FROM assignments a
+        LEFT JOIN gifts g ON g.id = a.giftId
+        WHERE a.ipHash = ?
+        ORDER BY a.id DESC
+        LIMIT 1
+      `
+    )
+    .bind(ipHash)
+    .first();
 }
 
 function sanitizeName(name) {

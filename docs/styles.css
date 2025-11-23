@@ -23,7 +23,7 @@ html,
 body {
     margin: 0;
     padding: 0;
-    background: #121214;
+    background: radial-gradient(circle at 20% 20%, rgba(255, 159, 46, 0.08), transparent 32%), radial-gradient(circle at 80% 0%, rgba(108, 156, 255, 0.08), transparent 30%), #0B0B0C;
     color: var(--fg);
     font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -69,6 +69,7 @@ a:hover {
     min-height: 420px;
     border-radius: var(--radius);
     background: var(--panel);
+    background-image: linear-gradient(145deg, rgba(255, 159, 46, 0.08), rgba(108, 156, 255, 0.05), rgba(255, 159, 46, 0.04)), repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0, rgba(255,255,255,0.03) 2px, transparent 2px, transparent 6px);
     padding: 24px;
     position: relative;
     overflow: hidden;
@@ -120,6 +121,7 @@ a:hover {
     display: grid;
     gap: 10px;
     justify-items: center;
+    perspective: 600px;
 }
 .dice-face {
     width: 96px;
@@ -131,14 +133,23 @@ a:hover {
     border: 1px solid rgba(255, 255, 255, .08);
     box-shadow: 0 18px 40px rgba(0, 0, 0, .35), inset 0 0 0 1px rgba(255, 255, 255, .02);
     font-size: 48px;
-    transition: transform .25s var(--eio);
+    transition: transform .25s var(--eio), box-shadow .25s var(--eio);
 }
 .dice-face.spin {
-    transform: rotate(12deg) scale(1.06);
+    transform: rotateX(14deg) rotateY(-10deg) scale(1.06);
+    box-shadow: 0 24px 45px rgba(0, 0, 0, .45), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
 }
 .dice-caption {
     font-size: 16px;
     color: var(--muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }
 
 /* ====== Form fields ====== */
@@ -213,10 +224,11 @@ a:hover {
 .btn-primary {
     background: var(--accent);
     color: #1b1205;
+    box-shadow: 0 8px 26px rgba(255, 159, 46, 0.35);
 }
 
 .btn-primary:hover {
-    box-shadow: 0 6px 18px rgba(255, 159, 46, .35);
+    box-shadow: 0 10px 30px rgba(255, 159, 46, .45);
 }
 
 .btn-ghost {
@@ -237,6 +249,23 @@ a:hover {
 
 .btn-danger:hover {
     box-shadow: 0 6px 18px rgba(255, 90, 90, .35);
+}
+
+/* ====== Gifts ====== */
+.gift-wrap {
+    transition: transform .25s var(--eio), box-shadow .25s var(--eio);
+}
+.gift-wrap:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 40px rgba(0, 0, 0, .35);
+}
+.gift-img {
+    border-radius: var(--radius);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .38), 0 0 0 1px rgba(255, 255, 255, 0.03);
+    transition: transform .25s var(--eio);
+}
+.gift-wrap:hover .gift-img {
+    transform: scale(1.01);
 }
 
 /* ====== Cards & Tables ====== */

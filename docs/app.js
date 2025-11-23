@@ -18,10 +18,11 @@ function escapeHtml(str = '') { return String(str).replace(/[&<>"]+/g, s => ({ "
 async function api(path, opts = {}) {
   const url = API() + path;
   let res;
+  const clientId = getClientId();
   try {
     res = await fetch(url, {
       ...opts,
-      headers: { 'Content-Type': 'application/json', ...(opts.headers || {}) }
+      headers: { 'Content-Type': 'application/json', 'X-Client-Id': clientId, ...(opts.headers || {}) }
     });
   } catch (e) {
     throw new Error('Немає інтернету або сервер недоступний');
@@ -236,3 +237,18 @@ function renderFinal(gift) {
     }
   } catch {}
 })();
+// постійний clientId у localStorage
+function getClientId() {
+  const key = 'clientId';
+  let id = localStorage.getItem(key);
+  if (!id) {
+    id = crypto.randomUUID ? crypto.randomUUID() : cryptoRandomString();
+    localStorage.setItem(key, id);
+  }
+  return id;
+}
+
+function cryptoRandomString() {
+  const arr = crypto.getRandomValues(new Uint8Array(16));
+  return Array.from(arr, (b) => b.toString(16).padStart(2, '0')).join('');
+}
