@@ -154,36 +154,32 @@ async function handleRandom(request, env, cors, db) {
   if (!gotLock) return json({ error: "busy" }, cors, 429);
 
   try {
-    await begin(db);
-
     const pick = await db
       .prepare("SELECT id, title, description, imageUrl FROM gifts WHERE active = 1 AND stock > 0 ORDER BY RANDOM() LIMIT 1")
       .first();
     if (!pick) {
-      await rollback(db);
       return json({ error: "no_stock" }, cors, 409);
     }
 
-    const updateRes = await db.prepare("UPDATE gifts SET stock = stock - 1 WHERE id = ? AND stock > 0").bind(pick.id).run();
-    if (!updateRes.success || updateRes.meta.changes !== 1) {
-      await rollback(db);
+    const statements = [
+      db.prepare("UPDATE gifts SET stock = stock - 1 WHERE id = ? AND stock > 0").bind(pick.id),
+      existing
+        ? db.prepare("UPDATE assignments SET giftId = ? WHERE id = ?").bind(pick.id, existing.id)
+        : db.prepare("INSERT INTO assignments(ipHash, giftId) VALUES(?, ?)").bind(ipHash, pick.id),
+      db.prepare("INSERT INTO logs(ipHash, action) VALUES(?, 'random')").bind(ipHash),
+    ];
+
+    const results = await runBatch(db, statements);
+    const updateRes = results?.[0];
+    if (!updateRes?.success || updateRes.meta?.changes !== 1) {
       return json({ error: "no_stock" }, cors, 409);
     }
 
-    if (existing) {
-      await db.prepare("UPDATE assignments SET giftId = ? WHERE id = ?").bind(pick.id, existing.id).run();
-    } else {
-      await db.prepare("INSERT INTO assignments(ipHash, giftId) VALUES(?, ?)").bind(ipHash, pick.id).run();
-    }
-
-    await run(db, "INSERT INTO logs(ipHash, action) VALUES(?, 'random')", [ipHash]);
-    await commit(db);
-    console.log("random:tx_commit", pick.id);
+    console.log("random:commit_like", pick.id);
 
     return json({ gift: mapGiftForClient(pick) }, cors);
   } catch (e) {
     console.error("random:error", e?.message || e);
-    await rollback(db);
     return json({ error: String(e?.message || e) }, cors, 500);
   } finally {
     await unlock(env, lockKey);
@@ -546,18 +542,6 @@ async function logAction(db, ipHash, action) {
   }
 }
 
-async function begin(db) {
-  await execSql(db, "BEGIN IMMEDIATE");
-}
-async function commit(db) {
-  await execSql(db, "COMMIT");
-}
-async function rollback(db) {
-  try {
-    await execSql(db, "ROLLBACK");
-  } catch {}
-}
-
 async function execSql(db, sql) {
   // D1 meta aggregation sometimes assumes exec/batch returns duration; run statements one by one to stay safe.
   const parts = sql
@@ -572,6 +556,18 @@ async function execSql(db, sql) {
 async function run(db, sql, binds = []) {
   const stmt = db.prepare(sql);
   return (binds.length ? stmt.bind(...binds) : stmt).run();
+}
+
+async function runBatch(db, statements) {
+  if (!statements?.length) return [];
+  if (typeof db.batch === "function") {
+    return db.batch(statements);
+  }
+  const results = [];
+  for (const stmt of statements) {
+    results.push(await stmt.run());
+  }
+  return results;
 }
 
 function httpError(status, message) {
