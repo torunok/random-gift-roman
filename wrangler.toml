@@ -4,12 +4,12 @@ compatibility_date = "2024-09-30"
 
 [[kv_namespaces]]
 binding = "KV"
-id = "5ae998a2f15a4265bb0cf923d96ec16b"
+id = "255f4944a2db4bc897da1a259236fada"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "random_gift_db_v2"
-database_id = "371a7a79-24ed-48af-b3bb-74ed6225823c"
+database_name = "random_gift_db_v3"
+database_id = "e2eb1ec1-5f76-4995-9a07-fc18a2fa9fd7"
 
 [vars]
 ALLOWED_ORIGIN = "https://torunok.github.io"

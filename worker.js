@@ -562,7 +562,14 @@ async function execSql(db, sql) {
   if (typeof db.exec === "function") {
     await db.exec(sql);
   } else {
-    await db.prepare(sql).run();
+    // D1 without exec() does not support multi-statement prepare; split manually
+    const parts = sql
+      .split(";")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    for (const stmt of parts) {
+      await db.prepare(stmt).run();
+    }
   }
 }
 
