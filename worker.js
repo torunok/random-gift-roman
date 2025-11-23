@@ -313,7 +313,7 @@ function makeCORSHeaders(origin, env) {
   return {
     "Access-Control-Allow-Origin": ok ? allow : "*",
     "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type,Authorization",
+    "Access-Control-Allow-Headers": "Content-Type,Authorization,X-Client-Id",
     "Access-Control-Max-Age": "86400",
   };
 }
