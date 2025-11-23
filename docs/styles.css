@@ -93,11 +93,14 @@ a:hover {
     }
     .stage {
         width: 100%;
-        min-height: calc(100vh - 140px);
-        padding: 16px;
+        min-height: auto;
+        padding: 14px;
     }
     .header {
         padding: 16px 12px;
+    }
+    .header h1 {
+        font-size: 18px;
     }
     .modal-content {
         width: 100%;
@@ -112,16 +115,41 @@ a:hover {
     .gift-wrap {
         flex-direction: column;
         gap: 14px;
+        align-items: flex-start;
     }
     .gift-img {
         width: 100%;
-        max-height: 320px;
+        max-height: 260px;
         object-fit: cover;
+    }
+    .gift-desc {
+        width: 100%;
+        padding: 12px;
+        font-size: 15px;
+    }
+    h2, h3 {
+        font-size: 20px;
+        margin: 8px 0;
+    }
+    .intro {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .intro .photo {
+        width: 100%;
+        height: 240px;
+    }
+    .intro .text {
+        max-width: 100%;
     }
     .intro .photo img,
     .center img {
         max-width: 220px;
         width: 100%;
+    }
+    .admin-main {
+        height: auto;
+        padding: 12px;
     }
 }
 
