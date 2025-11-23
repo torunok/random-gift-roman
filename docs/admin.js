@@ -105,7 +105,7 @@ async function loadGifts() {
   const tbody = $('#giftsTable tbody');
   if (!tbody) return;
 
-  tbody.innerHTML = '<tr><td colspan="5">Завантаження…</td></tr>';
+  tbody.innerHTML = '<tr><td colspan="6">Завантаження…</td></tr>';
 
   try {
     const r = await fetchAuth(base + '/api/admin/gifts');
@@ -117,8 +117,10 @@ async function loadGifts() {
 
     items.forEach(g => {
       const tr = document.createElement('tr');
+      const imgSrc = absoluteUrl(g.imageUrl || '');
       tr.innerHTML = `
         <td>${g.id}</td>
+        <td>${imgSrc ? `<img class="thumb" src="${escapeHtml(imgSrc)}" alt="img"/>` : ''}</td>
         <td>${escapeHtml(g.title || '')}</td>
         <td>${typeof g.stock === 'number' ? g.stock : (g.stock ?? 0)}</td>
         <td>${g.active ? '✅' : '⛔'}</td>
@@ -133,7 +135,7 @@ async function loadGifts() {
     });
 
     if (!items.length) {
-      tbody.innerHTML = '<tr><td colspan="5">Поки порожньо</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="6">Поки порожньо</td></tr>';
     }
 
     tbody.onclick = async (e) => {
@@ -155,7 +157,7 @@ async function loadGifts() {
 
   } catch (e) {
     console.warn('Gifts load error:', e);
-    tbody.innerHTML = '<tr><td colspan="5">Помилка завантаження</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6">Помилка завантаження</td></tr>';
   }
 }
 
@@ -345,6 +347,12 @@ function escapeHtml(str = '') {
     '>' : '&gt;',
     '"' : '&quot;'
   }[s]));
+}
+
+function absoluteUrl(u = '') {
+  if (!u) return '';
+  if (/^https?:\/\//i.test(u)) return u;
+  return API().replace(/\/$/, '') + u;
 }
 
 /* ===================== INIT ===================== */
