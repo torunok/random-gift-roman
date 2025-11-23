@@ -139,6 +139,11 @@ a:hover {
     color: var(--muted);
 }
 
+.muted {
+    color: var(--muted);
+    font-size: 12px;
+}
+
 .actions {
     display: flex;
     gap: 12px;

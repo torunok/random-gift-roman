@@ -5,6 +5,7 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 const stage = $('#stage');
 const consentModal = $('#consentModal');
 const inputName = $('#inputName');
+const inputTelegram = $('#inputTelegram');
 const checkboxAgree = $('#checkboxAgree');
 const btnAgree = $('#btnAgree');
 const btnPass = $('#btnPass');
@@ -57,11 +58,21 @@ function hideConsent() {
 }
 
 checkboxAgree?.addEventListener('change', () => {
-  btnAgree.disabled = !(checkboxAgree.checked && inputName.value.trim().length >= 2);
+  btnAgree.disabled = !canSubmitConsent();
 });
 inputName?.addEventListener('input', () => {
-  btnAgree.disabled = !(checkboxAgree.checked && inputName.value.trim().length >= 2);
+  btnAgree.disabled = !canSubmitConsent();
 });
+inputTelegram?.addEventListener('input', () => {
+  btnAgree.disabled = !canSubmitConsent();
+});
+
+function canSubmitConsent() {
+  const nameOk = inputName && inputName.value.trim().length >= 2;
+  const tgValue = inputTelegram ? inputTelegram.value.trim().replace(/^@/, '') : '';
+  const tgOk = /^[a-zA-Z0-9_]{3,}$/.test(tgValue);
+  return checkboxAgree?.checked && nameOk && tgOk;
+}
 
 btnPass?.addEventListener('click', () => {
   const msg = el(`<div class="card fade-in"><h2>Дякую за щирість! Гарного дня 😄</h2></div>`);
@@ -71,10 +82,11 @@ btnPass?.addEventListener('click', () => {
 
 btnAgree?.addEventListener('click', async () => {
   const name = inputName.value.trim();
-  if (!name) return;
+  const tgRaw = (inputTelegram?.value || '').trim().replace(/^@/, '');
+  if (!name || tgRaw.length < 3) return;
 
   try {
-    await api('/api/agree', { method: 'POST', body: JSON.stringify({ name }) });
+    await api('/api/agree', { method: 'POST', body: JSON.stringify({ name, telegram: '@' + tgRaw }) });
   } catch (e) {
     console.warn('agree failed:', e.message);
   }
@@ -85,11 +97,7 @@ btnAgree?.addEventListener('click', async () => {
   try {
     const me = await api('/api/me', { method: 'GET' });
     if (me && me.assigned) {
-      if (me.telegram && me.telegram.trim().length >= 3) {
-        return renderFinal(me.gift);
-      } else {
-        return showThanksForm(); // обов’язковий збір Telegram
-      }
+      return renderFinal(me.gift);
     }
   } catch {}
   renderIntro(name);
@@ -124,11 +132,10 @@ async function startRandom() {
   stage.appendChild(blackout);
 
   await sleep(1200);
-  blackout.textContent = 'Все ґуд, це просто такий ефект)';
-  await sleep(600);
-  for (let i = 5; i >= 1; i--) {
-    blackout.textContent = String(i);
-    await sleep(600);
+  const countdownSteps = ['🎲', '3', '2', '1'];
+  for (const step of countdownSteps) {
+    blackout.textContent = step;
+    await sleep(520);
   }
 
   let res;
@@ -182,78 +189,12 @@ async function showGiftSequence(gift) {
       <div class="gift-desc">
         <h3>${escapeHtml(gift.name || 'Подарунок')}</h3>
         <p>${escapeHtml(gift.description || 'Опис')}</p>
-        <button id="btnMore" class="btn btn-ghost" style="margin-top:22px;">Тицяй сюди!</button>
       </div>
     </div>
   `);
   stage.appendChild(wrap);
-
-  // клік лише для цієї кнопки
-  wrap.querySelector('#btnMore').addEventListener('click', showThanksForm);
 }
 
-function showThanksForm() {
-  stage.innerHTML = '';
-  const view = el(`
-    <div class="intro fade-in ease-slow">
-      <div class="photo slide-left ease-slow"><img src="./images/roman.png" alt="Roman"/></div>
-      <div class="text slide-right ease-slow">
-        <h2>Щиро вдячний!</h2>
-        <p>Буду радий розділити цей момент з тобою. А поки запиши свій нік у Telegram, щоб я пізніше повідомив дату, місце та час).</p>
-      </div>
-    </div>
-  `);
-
-  const form = el(`
-    <div class="card fade-in ease-slow" style="margin-top:16px;">
-      <label class="field"><span>Твій Telegram-нік</span>
-        <input id="tgNick" type="text" placeholder="@nickname" inputmode="text" autocomplete="username"
-               required pattern="^@?[a-zA-Z0-9_]{3,}$" />
-      </label>
-      <div class="actions center">
-        <button id="btnMeet" class="btn btn-primary" disabled>Зустрінемось</button>
-      </div>
-    </div>
-  `);
-
-  stage.append(view, form);
-
-  // live-валідація
-  const tgInput = form.querySelector('#tgNick');
-  const meetBtn = form.querySelector('#btnMeet');
-  tgInput.addEventListener('input', () => {
-    const ok = /^[a-zA-Z0-9_]{3,}$/.test(tgInput.value.replace(/^@/, ''));
-    meetBtn.disabled = !ok;
-  });
-
-  meetBtn.addEventListener('click', finalizeUser);
-}
-
-async function finalizeUser() {
-  const inp = $('#tgNick');
-  const raw = (inp?.value || '').trim();
-  const nick = raw.replace(/^@/, '');
-  if (!/^[a-zA-Z0-9_]{3,}$/.test(nick)) {
-    alert('Вкажіть коректний нік у Telegram (мінімум 3 символи, латиниця/цифри/_)');
-    return;
-  }
-
-  try {
-    await api('/api/finalize', { method: 'POST', body: JSON.stringify({ telegram: '@' + nick }) });
-  } catch (e) {
-    alert('Не вдалося зберегти нік: ' + e.message);
-    return;
-  }
-
-  try {
-    const me = await api('/api/me', { method: 'GET' });
-    if (me && me.assigned) return renderFinal(me.gift);
-  } catch (e) {
-    alert('Не вдалося отримати фінальні дані: ' + e.message);
-  }
-}
-
-// ФІНАЛ БЕЗ БЛОКУ «Для: ...» — повністю прибрано
 function renderFinal(gift) {
   stage.innerHTML = '';
   const block = el(`
@@ -276,11 +217,7 @@ function renderFinal(gift) {
     const me = await api('/api/me', { method: 'GET' });
     if (me && me.assigned) {
       hideConsent();
-      if (me.telegram && me.telegram.trim().length >= 3) {
-        return renderFinal(me.gift);
-      } else {
-        return showThanksForm(); // обов’язковий збір Telegram
-      }
+      return renderFinal(me.gift);
     }
   } catch {}
 })();

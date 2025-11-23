@@ -60,13 +60,14 @@ export default {
 async function handleAgree(request, env, cors, db) {
   const body = await readJson(request);
   const name = sanitizeName(body?.name);
+  const telegram = body?.telegram ? sanitizeTelegram(body.telegram) : null;
   const ipHash = await getIpHash(request, env.SALT);
 
   const existing = await getAssignmentByHash(db, ipHash);
   if (existing) {
-    await db.prepare("UPDATE assignments SET name = ? WHERE id = ?").bind(name, existing.id).run();
+    await db.prepare("UPDATE assignments SET name = ?, telegram = ? WHERE id = ?").bind(name, telegram, existing.id).run();
   } else {
-    await db.prepare("INSERT INTO assignments (ipHash, name) VALUES (?, ?)").bind(ipHash, name).run();
+    await db.prepare("INSERT INTO assignments (ipHash, name, telegram) VALUES (?, ?, ?)").bind(ipHash, name, telegram).run();
   }
   await logAction(db, ipHash, "agree");
 
