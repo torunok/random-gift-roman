@@ -106,6 +106,41 @@ a:hover {
     animation: scale-in .45s var(--eio) forwards;
 }
 
+/* ====== Overlay / Dice ====== */
+#blackOverlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    font-size: 42px;
+    letter-spacing: 1px;
+}
+.dice-grid {
+    display: grid;
+    gap: 10px;
+    justify-items: center;
+}
+.dice-face {
+    width: 96px;
+    height: 96px;
+    display: grid;
+    place-items: center;
+    background: rgba(255, 255, 255, .04);
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, .08);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, .35), inset 0 0 0 1px rgba(255, 255, 255, .02);
+    font-size: 48px;
+    transition: transform .25s var(--eio);
+}
+.dice-face.spin {
+    transform: rotate(12deg) scale(1.06);
+}
+.dice-caption {
+    font-size: 16px;
+    color: var(--muted);
+}
+
 /* ====== Form fields ====== */
 .field {
     display: flex;

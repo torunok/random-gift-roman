@@ -122,7 +122,14 @@ function renderIntro(name) {
 }
 
 function makeOverlay() {
-  const blackout = el(`<div id="blackOverlay" class="full-black ease-slow">...</div>`);
+  const blackout = el(
+    `<div id="blackOverlay" class="full-black ease-slow">
+      <div class="dice-grid">
+        <div class="dice-face" id="diceFace">🎲</div>
+        <div class="dice-caption" id="diceCaption">Готуємо кубики...</div>
+      </div>
+    </div>`
+  );
   return blackout;
 }
 
@@ -131,12 +138,18 @@ async function startRandom() {
   const blackout = makeOverlay();
   stage.appendChild(blackout);
 
-  await sleep(1200);
-  const countdownSteps = ['🎲', '3', '2', '1'];
-  for (const step of countdownSteps) {
-    blackout.textContent = step;
-    await sleep(520);
+  const diceEl = $('#diceFace');
+  const capEl = $('#diceCaption');
+  const faces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
+  capEl.textContent = 'Кидаємо кубики...';
+  for (let i = 0; i < 8; i++) {
+    const face = faces[Math.floor(Math.random() * faces.length)];
+    diceEl.textContent = face;
+    diceEl.classList.toggle('spin');
+    await sleep(200 + i * 40);
   }
+  capEl.textContent = 'Полетіло!';
+  await sleep(400);
 
   let res;
   try {
