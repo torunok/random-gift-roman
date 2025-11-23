@@ -69,7 +69,8 @@ inputTelegram?.addEventListener('input', () => {
 
 function canSubmitConsent() {
   const nameOk = inputName && inputName.value.trim().length >= 2;
-  const tgValue = inputTelegram ? inputTelegram.value.trim().replace(/^@/, '') : '';
+  const tgValueRaw = inputTelegram ? inputTelegram.value.trim() : '';
+  const tgValue = tgValueRaw.replace(/^@/, '');
   const tgOk = /^[a-zA-Z0-9_]{3,}$/.test(tgValue);
   return checkboxAgree?.checked && nameOk && tgOk;
 }
@@ -82,11 +83,12 @@ btnPass?.addEventListener('click', () => {
 
 btnAgree?.addEventListener('click', async () => {
   const name = inputName.value.trim();
-  const tgRaw = (inputTelegram?.value || '').trim().replace(/^@/, '');
-  if (!name || tgRaw.length < 3) return;
+  const tgRaw = (inputTelegram?.value || '').trim();
+  const tgCheck = tgRaw.replace(/^@/, '');
+  if (!name || tgCheck.length < 3) return;
 
   try {
-    await api('/api/agree', { method: 'POST', body: JSON.stringify({ name, telegram: '@' + tgRaw }) });
+    await api('/api/agree', { method: 'POST', body: JSON.stringify({ name, telegram: tgRaw }) });
   } catch (e) {
     console.warn('agree failed:', e.message);
   }
