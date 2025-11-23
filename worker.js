@@ -575,6 +575,7 @@ async function run(db, sql, binds = []) {
 }
 
 function httpError(status, message) {
+  /** @type {Error & { status?: number }} */
   const err = new Error(message || "error");
   err.status = status;
   return err;
